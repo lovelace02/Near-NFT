@@ -1,59 +1,61 @@
-Non-fungible Token (NFT)
-===================
+# Summary
 
->**Note**: If you'd like to learn how to create an NFT contract from scratch that explores every aspect of the [NEP-171](https://github.com/near/NEPs/blob/master/neps/nep-0171.md) standard including an NFT marketplace, check out the NFT [Zero to Hero Tutorial](https://docs.near.org/tutorials/nfts/introduction).
+> **Note**: If you'd like to learn how to create an NFT contract from scratch that explores every aspect of the [NEP-171](https://github.com/near/NEPs/blob/master/neps/nep-0171.md) standard including an NFT marketplace, check out the NFT [Zero to Hero Tutorial](https://docs.near.org/tutorials/nfts/introduction).
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/near-examples/NFT)
 
-
 This repository includes an example implementation of a [non-fungible token] contract which uses [near-contract-standards] and workspaces-js and -rs tests.
 
-  [non-fungible token]: https://nomicon.io/Standards/NonFungibleToken/README.html
-  [near-contract-standards]: https://github.com/near/near-sdk-rs/tree/master/near-contract-standards
-  [simulation]: https://github.com/near/near-sdk-rs/tree/master/near-sdk-sim
-Prerequisites
-=============
+[non-fungible token]: https://nomicon.io/Standards/NonFungibleToken/README.html
+[near-contract-standards]: https://github.com/near/near-sdk-rs/tree/master/near-contract-standards
+[simulation]: https://github.com/near/near-sdk-rs/tree/master/near-sdk-sim
+
+# Prerequisites
+
 If you're using Gitpod, you can skip this step.
 
-  * Make sure Rust is installed per the prerequisites in [`near-sdk-rs`](https://github.com/near/near-sdk-rs).
-  * Make sure [near-cli](https://github.com/near/near-cli) is installed.
+- Make sure Rust is installed per the prerequisites in [`near-sdk-rs`](https://github.com/near/near-sdk-rs).
+- Make sure [near-cli](https://github.com/near/near-cli) is installed.
 
-Explore this contract
-=====================
+# Explore this contract
 
 The source for this contract is in `nft/src/lib.rs`. It provides methods to manage access to tokens, transfer tokens, check access, and get token owner. Note, some further exploration inside the rust macros is needed to see how the `NonFungibleToken` contract is implemented.
 
-Building this contract
-======================
+# Building this contract
+
 Run the following, and we'll build our rust project up via cargo. This will generate our WASM binaries into our `res/` directory. This is the smart contract we'll be deploying onto the NEAR blockchain later.
+
 ```bash
-./scripts/build.sh
+./build.sh
 ```
 
-Testing this contract
-=====================
+# Testing this contract
+
 We have some tests that you can run. For example, the following will run our simple tests to verify that our contract code is working.
 
-*Unit Tests*
+_Unit Tests_
+
 ```bash
 cd nft
 cargo test -- --nocapture
 ```
 
-*Integration Tests*
-*Rust*
+_Integration Tests_
+_Rust_
+
 ```bash
 cd integration-tests/rs
 cargo run --example integration-tests
 ```
-*TypeScript*
+
+_TypeScript_
+
 ```bash
 cd integration-tests/ts
-yarn && yarn test 
+yarn && yarn test
 ```
 
-Using this contract
-===================
+# Using this contract
 
 ### Quickest deploy
 
@@ -65,7 +67,7 @@ near dev-deploy --wasmFile res/non_fungible_token.wasm
 
 Behind the scenes, this is creating an account and deploying a contract to it. On the console, notice a message like:
 
->Done deploying to dev-1234567890123
+> Done deploying to dev-1234567890123
 
 In this instance, the account is `dev-1234567890123`. A file has been created containing a key pair to
 the account, located at `neardev/dev-account`. To make the next few steps easier, we're going to set an
@@ -77,6 +79,7 @@ source neardev/dev-account.env
 ```
 
 You can tell if the environment variable is set correctly if your command line prints the account name after this command:
+
 ```bash
 echo $CONTRACT_NAME
 ```
@@ -123,10 +126,9 @@ We'll be able to view our metadata right after:
 
 Then, let's mint our first token. This will create a NFT based on Olympus Mons where only one copy exists:
 
-    near call $ID nft_mint '{"token_id": "0", "receiver_id": "'$ID'", "token_metadata": { "title": "Olympus Mons", "description": "Tallest mountain in charted solar system", "media": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Olympus_Mons_alt.jpg/1024px-Olympus_Mons_alt.jpg", "copies": 1}}' --accountId $ID --deposit 0.1
+    near call $ID nft_mint {} --accountId $ID --deposit 11
 
-Transferring our NFT
-====================
+# Transferring our NFT
 
 Let's set up an account to transfer our freshly minted token to. This account will be a sub-account of the NEAR account we logged in with originally via `near login`.
 
@@ -142,13 +144,12 @@ Then we'll transfer over the NFT into Alice's account. Exactly 1 yoctoNEAR of de
 
 Checking Alice's account again shows us that she has the Olympus Mons token.
 
-Notes
-=====
+# Notes
 
-* The maximum balance value is limited by U128 (2**128 - 1).
-* JSON calls should pass U128 as a base-10 string. E.g. "100".
-* This does not include escrow functionality, as ft_transfer_call provides a superior approach. An escrow system can, of course, be added as a separate contract or additional functionality within this contract.
+- The maximum balance value is limited by U128 (2\*\*128 - 1).
+- JSON calls should pass U128 as a base-10 string. E.g. "100".
+- This does not include escrow functionality, as ft_transfer_call provides a superior approach. An escrow system can, of course, be added as a separate contract or additional functionality within this contract.
 
-AssemblyScript
-==============
+# AssemblyScript
+
 Currently, AssemblyScript is not supported for this example. An old version can be found in the [NEP4 example](https://github.com/near-examples/NFT/releases/tag/nep4-example), but this is not recommended as it is out of date and does not follow the standards the NEAR SDK has set currently.
